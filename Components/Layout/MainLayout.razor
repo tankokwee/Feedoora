@@ -1,11 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
     <main>
+        <button class="btn-primary" onclick="showLoginPage()">Login</button>
+        <button class="btn-primary" onclick="showRegisterPage()">Register</button>
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
@@ -15,7 +13,16 @@
         </article>
     </main>
 </div>
+<script>
+    function showLoginPage() {
+        alert('LoginPage');
+    }
+    function showRegisterPage() {
+        alert('RegistrationPage');
+    }
 
+
+</script>
 <div id="blazor-error-ui">
     An unhandled error has occurred.
     <a href="" class="reload">Reload</a>
