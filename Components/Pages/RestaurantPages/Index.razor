@@ -1,0 +1,42 @@
+﻿@page "/restaurants"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Feedoora.Domain
+@using Feedoora.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Feedoora.Data.FeedooraContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="restaurants/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Restaurant">
+    <PropertyColumn Property="restaurant => restaurant.Username" />
+    <PropertyColumn Property="restaurant => restaurant.Password" />
+    <PropertyColumn Property="restaurant => restaurant.PhoneNum" />
+    <PropertyColumn Property="restaurant => restaurant.DateCreated" />
+    <PropertyColumn Property="restaurant => restaurant.DateUpdated" />
+    <PropertyColumn Property="restaurant => restaurant.Createdby" />
+    <PropertyColumn Property="restaurant => restaurant.Updatedby" />
+
+    <TemplateColumn Context="restaurant">
+        <a href="@($"restaurants/edit?id={restaurant.Id}")">Edit</a> |
+        <a href="@($"restaurants/details?id={restaurant.Id}")">Details</a> |
+        <a href="@($"restaurants/delete?id={restaurant.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private FeedooraContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

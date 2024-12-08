@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedora</title>
+    <link rel="stylesheet" href="app.css">
+</head>
+<body>
+    <div class="top-row">
+        <div class="container-fluid">
+            <nav class="nav-menu">
+                <button class="btn btn-link home-btn" onclick="navigateToHome()">
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+                </button>
+                <button class="btn btn-link counter-btn" onclick="navigateToCounter()">
+                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+                </button>
+                <button class="btn btn-link weather-btn" onclick="navigateToWeather()">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <script>
+        function navigateToHome() {
+            window.location.href = '/';
+        }
+
+        function navigateToCounter() {
+            window.location.href = '/counter';
+        }
+
+        function navigateToWeather() {
+            window.location.href = '/weather';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+﻿@page "/deliverypartners/create"
+@using Microsoft.EntityFrameworkCore
+@using Feedoora.Domain
+@inject IDbContextFactory<Feedoora.Data.FeedooraContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>DeliveryPartner</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="DeliveryPartner" OnValidSubmit="AddDeliveryPartner" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label> 
+                <InputText id="username" @bind-Value="DeliveryPartner.Username" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.Username" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label> 
+                <InputText id="password" @bind-Value="DeliveryPartner.Password" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.Password" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="phonenum" class="form-label">PhoneNum:</label> 
+                <InputNumber id="phonenum" @bind-Value="DeliveryPartner.PhoneNum" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.PhoneNum" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="DeliveryPartner.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="DeliveryPartner.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">Createdby:</label> 
+                <InputText id="createdby" @bind-Value="DeliveryPartner.Createdby" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.Createdby" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">Updatedby:</label> 
+                <InputText id="updatedby" @bind-Value="DeliveryPartner.Updatedby" class="form-control" /> 
+                <ValidationMessage For="() => DeliveryPartner.Updatedby" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/deliverypartners">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private DeliveryPartner DeliveryPartner { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddDeliveryPartner()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.DeliveryPartner.Add(DeliveryPartner);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/deliverypartners");
+    }
+}

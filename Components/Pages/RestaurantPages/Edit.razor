@@ -1,0 +1,119 @@
+﻿@page "/restaurants/edit"
+@using Microsoft.EntityFrameworkCore
+@using Feedoora.Domain
+@inject IDbContextFactory<Feedoora.Data.FeedooraContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Restaurant</h2>
+<hr />
+@if (Restaurant is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Restaurant" OnValidSubmit="UpdateRestaurant" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Restaurant.Id" value="@Restaurant.Id" />
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username:</label>
+                    <InputText id="username" @bind-Value="Restaurant.Username" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Username" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password:</label>
+                    <InputText id="password" @bind-Value="Restaurant.Password" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Password" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="phonenum" class="form-label">PhoneNum:</label>
+                    <InputNumber id="phonenum" @bind-Value="Restaurant.PhoneNum" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.PhoneNum" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="Restaurant.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Restaurant.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">Createdby:</label>
+                    <InputText id="createdby" @bind-Value="Restaurant.Createdby" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Createdby" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">Updatedby:</label>
+                    <InputText id="updatedby" @bind-Value="Restaurant.Updatedby" class="form-control" />
+                    <ValidationMessage For="() => Restaurant.Updatedby" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/restaurants">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Restaurant? Restaurant { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Restaurant ??= await context.Restaurant.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Restaurant is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateRestaurant()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Restaurant!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!RestaurantExists(Restaurant!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/restaurants");
+    }
+
+    private bool RestaurantExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Restaurant.Any(e => e.Id == id);
+    }
+}

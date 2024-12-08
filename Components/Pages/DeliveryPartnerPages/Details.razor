@@ -1,0 +1,58 @@
+﻿@page "/deliverypartners/details"
+@using Microsoft.EntityFrameworkCore
+@using Feedoora.Domain
+@inject IDbContextFactory<Feedoora.Data.FeedooraContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>DeliveryPartner</h2>
+    <hr />
+    @if (deliverypartner is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Username</dt>
+            <dd class="col-sm-10">@deliverypartner.Username</dd>
+            <dt class="col-sm-2">Password</dt>
+            <dd class="col-sm-10">@deliverypartner.Password</dd>
+            <dt class="col-sm-2">PhoneNum</dt>
+            <dd class="col-sm-10">@deliverypartner.PhoneNum</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@deliverypartner.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@deliverypartner.DateUpdated</dd>
+            <dt class="col-sm-2">Createdby</dt>
+            <dd class="col-sm-10">@deliverypartner.Createdby</dd>
+            <dt class="col-sm-2">Updatedby</dt>
+            <dd class="col-sm-10">@deliverypartner.Updatedby</dd>
+        </dl>
+        <div>
+            <a href="@($"/deliverypartners/edit?id={deliverypartner.Id}")">Edit</a> |
+            <a href="@($"/deliverypartners")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private DeliveryPartner? deliverypartner;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        deliverypartner = await context.DeliveryPartner.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (deliverypartner is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

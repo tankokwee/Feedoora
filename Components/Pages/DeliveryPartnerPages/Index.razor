@@ -1,0 +1,42 @@
+﻿@page "/deliverypartners"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using Feedoora.Domain
+@using Feedoora.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<Feedoora.Data.FeedooraContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="deliverypartners/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.DeliveryPartner">
+    <PropertyColumn Property="deliverypartner => deliverypartner.Username" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.Password" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.PhoneNum" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.DateCreated" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.DateUpdated" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.Createdby" />
+    <PropertyColumn Property="deliverypartner => deliverypartner.Updatedby" />
+
+    <TemplateColumn Context="deliverypartner">
+        <a href="@($"deliverypartners/edit?id={deliverypartner.Id}")">Edit</a> |
+        <a href="@($"deliverypartners/details?id={deliverypartner.Id}")">Details</a> |
+        <a href="@($"deliverypartners/delete?id={deliverypartner.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private FeedooraContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
